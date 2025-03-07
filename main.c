@@ -87,15 +87,18 @@ static void print_matrix(const char* map, size_t width, size_t height)
 
 char getchar_with_timeout(int timeout_seconds) {
 	int elapsed = 0;
-	while (elapsed < timeout_seconds) {
+	int timeout_milliseconds = timeout_seconds*1000;
+	while (elapsed < timeout_milliseconds) {
 		if (_kbhit()) {   // Check if a key is pressed
-			return _getch();  // Return the character if a key is pressed
+			char retrievedChar = _getch();
+			Sleep(timeout_milliseconds - elapsed);
+			return retrievedChar;  // Return the character if a key is pressed
 		}
 
-		// Sleep for 1 second
-		sleep_seconds(1);
+		// Sleep for 100 milliseconds
+		Sleep(100);
 
-		elapsed++;
+		elapsed += 100;
 	}
 	return -1;  // Return -1 if timeout reached without any key press
 }
